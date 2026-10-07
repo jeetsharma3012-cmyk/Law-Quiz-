@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#101a2e" />
+  <title>Law Quiz — Test Your Legal Knowledge</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #eef2f7;
+      --muted: #a6b2c2;
+      --green: #14b8a6;
+      --green-dark: #0f9488;
+      --paper: #1b2940;
+      --background: #101a2e;
+      --line: #33435c;
+      --gold: #f2bd63;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background:
+        radial-gradient(ellipse at 85% 4%, rgba(20, 184, 166, 0.16), transparent 37%),
+        var(--background);
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .site-header {
+      width: min(100% - 40px, 1040px);
+      height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 auto;
+      border-bottom: 1px solid rgba(212, 220, 232, 0.12);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-family: Arial, sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: var(--green);
+      color: white;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 19px;
+    }
+
+    .header-note {
+      color: var(--muted);
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+    }
+
+    main {
+      width: min(100% - 40px, 760px);
+      flex: 1;
+      margin: 0 auto;
+      padding: 55px 0 64px;
+    }
+
+    .intro {
+      margin-bottom: 27px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 13px;
+      color: var(--green);
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before, .eyebrow::after {
+      width: 18px;
+      height: 1px;
+      background: var(--gold);
+      content: "";
+    }
+
+    h1 {
+      font-size: clamp(34px, 6vw, 48px);
+      font-weight: 500;
+      letter-spacing: -1.4px;
+      line-height: 1.1;
+    }
+
+    .intro p {
+      margin-top: 12px;
+      color: var(--muted);
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .quiz-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--paper);
+      box-shadow: 0 20px 55px rgba(39, 48, 40, 0.08);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 26px 16px;
+      border-bottom: 1px solid var(--line);
+      font-family: Arial, sans-serif;
+    }
+
+    .topic-label {
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .question-number {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .progress-track {
+      height: 3px;
+      background: #33435c;
+    }
+
+    .progress-bar {
+      width: 10%;
+      height: 100%;
+      background: var(--gold);
+      transition: width 220ms ease;
+    }
+
+    .question-area {
+      padding: 30px 30px 27px;
+    }
+
+    .question-kicker {
+      margin-bottom: 11px;
+      color: var(--gold);
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+
+    .question-text {
+      min-height: 62px;
+      font-size: clamp(21px, 4vw, 27px);
+      font-weight: 500;
+      letter-spacing: -0.35px;
+      line-height: 1.35;
+    }
+
+    .answer-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .answer {
+      width: 100%;
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #22324b;
+      color: #e4ebf5;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.45;
+      text-align: left;
+      transition: border-color 150ms ease, background 150ms ease;
+    }
+
+    .answer:hover:not(:disabled) {
+      border-color: #348f87;
+      background: #283b53;
+    }
+
+    .answer-letter {
+      width: 27px;
+      height: 27px;
+      flex: 0 0 27px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: #33435c;
+      color: #c4cfdf;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .answer:disabled {
+      cursor: default;
+    }
+
+    .answer.correct {
+      border-color: #42b9a8;
+      background: #193d42;
+      color: #c3f4e9;
+    }
+
+    .answer.correct .answer-letter {
+      background: var(--green);
+      color: white;
+    }
+
+    .answer.incorrect {
+      border-color: #a96c63;
+      background: #3a2d3e;
+      color: #f0c2d7;
+    }
+
+    .answer.incorrect .answer-letter {
+      background: #a9574c;
+      color: white;
+    }
+
+    .card-bottom {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 26px;
+      border-top: 1px solid var(--line);
+      font-family: Arial, sans-serif;
+    }
+
+    .feedback {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .feedback.correct-text { color: var(--green); }
+    .feedback.incorrect-text {     color: #f0a6bb; }
+
+    .next-button, .restart-button {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 0 17px;
+      border: 0;
+      border-radius: 9px;
+      background: var(--green);
+      color: white;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      transition: background 150ms ease;
+    }
+
+    .next-button:hover, .restart-button:hover {
+      background: var(--green-dark);
+    }
+
+    .next-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .result {
+      padding: 36px 28px 40px;
+      text-align: center;
+    }
+
+    .result-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 20px;
+      padding: 8px 12px;
+      border: 1px solid #665337;
+      border-radius: 999px;
+      background: #383326;
+      color: #f2d28f;
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .score-ring {
+      width: 148px;
+      height: 148px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 22px;
+      border-radius: 50%;
+      background: conic-gradient(var(--green) calc(var(--score) * 1%), #33435c 0);
+      box-shadow: 0 9px 22px rgba(36, 93, 72, 0.12);
+    }
+
+    .score-center {
+      width: 126px;
+      height: 126px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--paper);
+    }
+
+    .score-value {
+      color: var(--green);
+      font-family: Arial, sans-serif;
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+
+    .score-total {
+      margin-top: 6px;
+      color: var(--muted);
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+    }
+
+    .result h2 {
+      font-size: clamp(26px, 5vw, 34px);
+      font-weight: 500;
+      letter-spacing: -0.8px;
+    }
+
+    .result-description {
+      max-width: 360px;
+      margin: 10px auto 22px;
+      color: var(--muted);
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .result-summary {
+      max-width: 390px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin: 0 auto 24px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #22324b;
+      font-family: Arial, sans-serif;
+    }
+
+    .summary-item {
+      padding: 14px 10px;
+    }
+
+    .summary-item + .summary-item {
+      border-left: 1px solid var(--line);
+    }
+
+    .summary-item strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--ink);
+      font-size: 15px;
+    }
+
+    .summary-item span {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .restart-button {
+      min-height: 45px;
+      padding: 0 21px;
+    }
+
+    footer {
+      padding: 19px 20px 24px;
+      color: #8797ad;
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    @media (max-width: 560px) {
+      .site-header {
+        width: calc(100% - 32px);
+        height: 66px;
+      }
+
+      main {
+        width: calc(100% - 28px);
+        padding: 39px 0 44px;
+      }
+
+      .header-note {
+        font-size: 10px;
+      }
+
+      .intro {
+        margin-bottom: 22px;
+      }
+
+      .intro p {
+        max-width: 310px;
+        margin-right: auto;
+        margin-left: auto;
+        font-size: 13px;
+      }
+
+      .card-top {
+        padding: 17px 18px 14px;
+      }
+
+      .question-area {
+        padding: 24px 18px 22px;
+      }
+
+      .question-text {
+        min-height: 0;
+      }
+
+      .answer-list {
+        margin-top: 20px;
+      }
+
+      .answer {
+        min-height: 51px;
+        font-size: 13px;
+      }
+
+      .card-bottom {
+        padding: 13px 18px;
+      }
+
+      .result {
+        padding: 29px 8px 32px;
+      }
+
+      .score-ring {
+        width: 132px;
+        height: 132px;
+      }
+
+      .score-center {
+        width: 112px;
+        height: 112px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Quizly home">
+      <span class="brand-mark" aria-hidden="true">§</span>
+      <span>QUIZLY <span style="color: #a6b2c2; font-weight: 400;">/ LAW</span></span>
+    </a>
+    <span class="header-note" id="header-note">A practice quiz for law students</span>
+  </header>
+
+  <main>
+    <section class="intro">
+      <div class="eyebrow">Test your legal knowledge</div>
+      <h1>The Law Student Quiz</h1>
+      <p>Ten questions across constitutional, criminal and contract law.<br />Take your time and trust your legal instincts.</p>
+    </section>
+
+    <section class="quiz-card" aria-label="Law student quiz">
+      <div class="card-top">
+        <span class="topic-label">INDIAN LAW · MIXED TOPICS</span>
+        <span class="question-number" id="question-number">Question 1 of 10</span>
+      </div>
+      <div class="progress-track" aria-label="Quiz progress">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="question-area" id="question-area">
+        <p class="question-kicker">Select one answer</p>
+        <h2 class="question-text" id="question-text"></h2>
+        <div class="answer-list" id="answer-list"></div>
+      </div>
+      <div class="card-bottom" id="card-bottom">
+        <p class="feedback" id="feedback" aria-live="polite">Choose the answer you think is correct.</p>
+        <button class="next-button" id="next-button" type="button" disabled>Next <span aria-hidden="true">→</span></button>
+      </div>
+    </section>
+  </main>
+
+  <footer>For learning and practice. Not legal advice.</footer>
+
+  <script>
+    const questionBank = [
+      {
+        text: "Which part of the Constitution of India contains the Fundamental Rights?",
+        options: ["Part II", "Part III", "Part IV", "Part IVA"],
+        answer: 1,
+        explanation: "Fundamental Rights are set out in Part III (Articles 12–35)."
+      },
+      {
+        text: "Which Article guarantees equality before the law and equal protection of the laws?",
+        options: ["Article 14", "Article 19", "Article 21", "Article 32"],
+        answer: 0,
+        explanation: "Article 14 guarantees equality before the law and equal protection of the laws."
+      },
+      {
+        text: "Which writ is commonly used to challenge unlawful detention?",
+        options: ["Mandamus", "Certiorari", "Habeas corpus", "Quo warranto"],
+        answer: 2,
+        explanation: "Habeas corpus requires a detained person to be brought before the court."
+      },
+      {
+        text: "Under the Indian Contract Act, 1872, an agreement enforceable by law is a:",
+        options: ["Proposal", "Contract", "Promise", "Consideration"],
+        answer: 1,
+        explanation: "Section 2(h) defines a contract as an agreement enforceable by law."
+      },
+      {
+        text: "Which section of the Indian Contract Act, 1872 defines consideration?",
+        options: ["Section 2(a)", "Section 2(b)", "Section 2(d)", "Section 10"],
+        answer: 2,
+        explanation: "Consideration is defined in Section 2(d) of the Indian Contract Act, 1872."
+      },
+      {
+        text: "The Bharatiya Nyaya Sanhita, 2023 replaced which law?",
+        options: ["Indian Evidence Act, 1872", "Indian Penal Code, 1860", "Code of Civil Procedure, 1908", "Indian Contract Act, 1872"],
+        answer: 1,
+        explanation: "The Bharatiya Nyaya Sanhita, 2023 replaced the Indian Penal Code, 1860."
+      },
+      {
+        text: "Which Article of the Constitution provides the right to move the Supreme Court for enforcement of Fundamental Rights?",
+        options: ["Article 21", "Article 32", "Article 44", "Article 226"],
+        answer: 1,
+        explanation: "Article 32 provides the right to approach the Supreme Court to enforce Fundamental Rights."
+      },
+      {
+        text: "In a civil case, the usual standard of proof is:",
+        options: ["Beyond reasonable doubt", "Preponderance of probabilities", "Absolute certainty", "Clear and convincing evidence only"],
+        answer: 1,
+        explanation: "Civil cases are generally decided on the balance, or preponderance, of probabilities."
+      },
+      {
+        text: "Which doctrine means that a matter already finally decided by a competent court cannot ordinarily be tried again between the same parties?",
+        options: ["Res ipsa loquitur", "Stare decisis", "Res judicata", "Sub judice"],
+        answer: 2,
+        explanation: "Res judicata prevents re-litigation of a matter already finally decided between the parties."
+      },
+      {
+        text: "Which Article protects life and personal liberty?",
+        options: ["Article 14", "Article 19", "Article 21", "Article 25"],
+        answer: 2,
+        explanation: "Article 21 states that no person shall be deprived of life or personal liberty except according to procedure established by law."
+      },
+      {
+        text: "Which part of the Constitution contains the Directive Principles of State Policy?",
+        options: ["Part III", "Part IV", "Part IVA", "Part V"],
+        answer: 1,
+        explanation: "The Directive Principles of State Policy are contained in Part IV of the Constitution."
+      },
+      {
+        text: "Which Article gives High Courts the power to issue writs?",
+        options: ["Article 32", "Article 136", "Article 226", "Article 356"],
+        answer: 2,
+        explanation: "Article 226 empowers High Courts to issue writs for Fundamental Rights and other purposes."
+      },
+      {
+        text: "Which landmark case is associated with the Basic Structure doctrine?",
+        options: ["Maneka Gandhi v. Union of India", "Kesavananda Bharati v. State of Kerala", "Golaknath v. State of Punjab", "Minerva Mills v. Union of India"],
+        answer: 1,
+        explanation: "Kesavananda Bharati v. State of Kerala (1973) established the Basic Structure doctrine."
+      },
+      {
+        text: "Which Article protects a person from being prosecuted and punished for the same offence more than once?",
+        options: ["Article 19(1)", "Article 20(2)", "Article 21", "Article 22(1)"],
+        answer: 1,
+        explanation: "Article 20(2) protects against double jeopardy: prosecution and punishment for the same offence more than once."
+      },
+      {
+        text: "The Bharatiya Nagarik Suraksha Sanhita, 2023 replaced which law?",
+        options: ["Indian Evidence Act, 1872", "Code of Criminal Procedure, 1973", "Indian Penal Code, 1860", "Code of Civil Procedure, 1908"],
+        answer: 1,
+        explanation: "The Bharatiya Nagarik Suraksha Sanhita, 2023 replaced the Code of Criminal Procedure, 1973."
+      },
+      {
+        text: "The Bharatiya Sakshya Adhiniyam, 2023 replaced which law?",
+        options: ["Indian Evidence Act, 1872", "Indian Contract Act, 1872", "Code of Civil Procedure, 1908", "Indian Penal Code, 1860"],
+        answer: 0,
+        explanation: "The Bharatiya Sakshya Adhiniyam, 2023 replaced the Indian Evidence Act, 1872."
+      },
+      {
+        text: "Under the Indian Contract Act, 1872, an agreement with a minor is generally:",
+        options: ["Void ab initio", "Valid if written", "Voidable only by the other party", "Valid if witnessed"],
+        answer: 0,
+        explanation: "Under the principle in Mohori Bibee v. Dharmodas Ghose, an agreement with a minor is void from the beginning."
+      },
+      {
+        text: "Which element is generally essential to form a valid contract under Section 10 of the Indian Contract Act?",
+        options: ["A written document in every case", "Free consent of competent parties", "Registration before a court", "Approval by a government officer"],
+        answer: 1,
+        explanation: "Section 10 requires, among other things, free consent of parties competent to contract and lawful consideration and object."
+      },
+      {
+        text: "In a criminal trial, the prosecution generally has to prove its case:",
+        options: ["On a balance of probabilities", "Beyond reasonable doubt", "By absolute certainty", "By a simple majority of witnesses"],
+        answer: 1,
+        explanation: "The usual standard for the prosecution in a criminal trial is proof beyond reasonable doubt."
+      },
+      {
+        text: "Which tort is commonly described as a breach of a legal duty causing foreseeable damage?",
+        options: ["Nuisance", "Negligence", "Defamation", "Trespass"],
+        answer: 1,
+        explanation: "Negligence generally involves a duty of care, breach, causation and resulting damage."
+      },
+      {
+        text: "What does the Latin maxim “audi alteram partem” mean?",
+        options: ["Let the decision stand", "Hear the other side", "No one is above the law", "The thing speaks for itself"],
+        answer: 1,
+        explanation: "Audi alteram partem is a principle of natural justice meaning that the other side must be heard."
+      },
+      {
+        text: "Which Article of the Constitution provides for the office of the Comptroller and Auditor General of India?",
+        options: ["Article 76", "Article 148", "Article 280", "Article 324"],
+        answer: 1,
+        explanation: "Article 148 provides for the Comptroller and Auditor General of India."
+      },
+      {
+        text: "Which Article provides for the Election Commission of India?",
+        options: ["Article 280", "Article 315", "Article 324", "Article 356"],
+        answer: 2,
+        explanation: "Article 324 vests the superintendence, direction and control of elections in the Election Commission."
+      },
+      {
+        text: "What is the minimum age to become a member of the Lok Sabha?",
+        options: ["18 years", "21 years", "25 years", "30 years"],
+        answer: 2,
+        explanation: "A candidate for the Lok Sabha must be at least 25 years old."
+      },
+      {
+        text: "Which Article allows the President of India to promulgate ordinances when Parliament is not in session?",
+        options: ["Article 123", "Article 143", "Article 213", "Article 352"],
+        answer: 0,
+        explanation: "Article 123 gives the President ordinance-making power when both Houses of Parliament are not in session, subject to constitutional conditions."
+      },
+      {
+        text: "What is the usual limitation period for filing a civil appeal under Article 116 of the Limitation Act, 1963, to a High Court?",
+        options: ["30 days", "60 days", "90 days", "120 days"],
+        answer: 2,
+        explanation: "Article 116(a) of the Limitation Act generally allows 90 days for an appeal to a High Court from a decree or order."
+      },
+      {
+        text: "Which principle requires a judge to have no personal interest in a matter they decide?",
+        options: ["Rule against bias", "Rule of precedent", "Doctrine of eclipse", "Rule of severability"],
+        answer: 0,
+        explanation: "The rule against bias is a core principle of natural justice: no one should be a judge in their own cause."
+      },
+      {
+        text: "Which constitutional amendment introduced Fundamental Duties into the Constitution?",
+        options: ["24th Amendment", "42nd Amendment", "44th Amendment", "52nd Amendment"],
+        answer: 1,
+        explanation: "The 42nd Constitutional Amendment Act, 1976 introduced Fundamental Duties in Part IVA."
+      },
+      {
+        text: "Which Article of the Constitution is associated with the abolition of untouchability?",
+        options: ["Article 15", "Article 17", "Article 18", "Article 23"],
+        answer: 1,
+        explanation: "Article 17 abolishes untouchability and forbids its practice in any form."
+      },
+      {
+        text: "Under the Indian Contract Act, 1872, communication of a proposal is complete when it comes to the knowledge of:",
+        options: ["The proposer", "The person to whom it is made", "A court", "A witness"],
+        answer: 1,
+        explanation: "Under Section 4, communication of a proposal is complete when it comes to the knowledge of the person to whom it is made."
+      },
+      {
+        text: "Which forum is established at the district level under the Consumer Protection Act, 2019?",
+        options: ["District Consumer Disputes Redressal Commission", "District Legal Services Authority", "District Court of Appeal", "Consumer Mediation Tribunal"],
+        answer: 0,
+        explanation: "The Consumer Protection Act, 2019 provides for District Consumer Disputes Redressal Commissions."
+      }
+    ];
+
+    const questionsPerQuiz = 10;
+    let questions = [];
+    let previousQuestionSet = [];
+    const questionNumber = document.getElementById("question-number");
+    const progressBar = document.getElementById("progress-bar");
+    let questionText = document.getElementById("question-text");
+    let answerList = document.getElementById("answer-list");
+    const feedback = document.getElementById("feedback");
+    const nextButton = document.getElementById("next-button");
+    const questionArea = document.getElementById("question-area");
+    const cardBottom = document.getElementById("card-bottom");
+    let currentQuestion = 0;
+    let score = 0;
+    let hasAnswered = false;
+    let isComplete = false;
+    const requestedName = new URLSearchParams(window.location.search).get("name");
+    const playerName = requestedName && requestedName.trim() ? requestedName.trim() : "Law student";
+    document.getElementById("header-note").textContent = `Quiz for ${playerName}`;
+
+    function shuffle(items) {
+      const shuffled = [...items];
+      for (let index = shuffled.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+      }
+      return shuffled;
+    }
+
+    function chooseQuestions(avoidPreviousSet = false) {
+      const availableQuestions = avoidPreviousSet
+        ? questionBank.filter((question) => !previousQuestionSet.includes(question))
+        : questionBank;
+
+      if (availableQuestions.length < questionsPerQuiz) {
+        throw new Error("Not enough unused questions to start a new quiz.");
+      }
+
+      questions = shuffle(availableQuestions).slice(0, questionsPerQuiz);
+      previousQuestionSet = questions;
+      questions = shuffle(questions);
+    }
+
+    function renderQuestion() {
+      const item = questions[currentQuestion];
+      hasAnswered = false;
+      isComplete = false;
+      questionNumber.textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+      progressBar.style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+      questionText.textContent = item.text;
+      feedback.textContent = "Choose the answer you think is correct.";
+      feedback.className = "feedback";
+      nextButton.disabled = true;
+      nextButton.innerHTML = currentQuestion === questions.length - 1
+        ? "Finish <span aria-hidden=\"true\">→</span>"
+        : "Next <span aria-hidden=\"true\">→</span>";
+      answerList.replaceChildren();
+
+      item.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "answer";
+        button.innerHTML = `<span class="answer-letter">${String.fromCharCode(65 + index)}</span><span></span>`;
+        button.lastElementChild.textContent = option;
+        button.addEventListener("click", () => selectAnswer(index));
+        answerList.append(button);
+      });
+    }
+
+    function selectAnswer(selectedIndex) {
+      if (hasAnswered) return;
+      hasAnswered = true;
+      const item = questions[currentQuestion];
+      const buttons = answerList.querySelectorAll(".answer");
+
+      buttons.forEach((button, index) => {
+        button.disabled = true;
+        if (index === item.answer) button.classList.add("correct");
+        if (index === selectedIndex && selectedIndex !== item.answer) button.classList.add("incorrect");
+      });
+
+      if (selectedIndex === item.answer) {
+        score += 1;
+        feedback.textContent = `Correct. ${item.explanation}`;
+        feedback.classList.add("correct-text");
+      } else {
+        feedback.textContent = `Not quite. ${item.explanation}`;
+        feedback.classList.add("incorrect-text");
+      }
+      nextButton.disabled = false;
+    }
+
+    function showResult() {
+      isComplete = true;
+      questionNumber.textContent = "Quiz complete";
+      progressBar.style.width = "100%";
+      const percentage = Math.round((score / questions.length) * 100);
+      const performanceLabel = score >= 9
+        ? "Outstanding result"
+        : score >= 7
+          ? "Well done"
+          : score >= 5
+            ? "Good effort"
+            : score >= 3
+              ? "Keep going"
+              : "Keep practicing";
+      const resultTitle = score >= 9
+        ? "Outstanding"
+        : score >= 7
+          ? "Well done"
+          : score >= 5
+            ? "Great effort"
+            : score >= 3
+              ? "Keep going"
+              : "Keep practicing";
+      const resultMessage = score >= 9
+        ? "Your grasp of these legal fundamentals is impressive. Keep that momentum going."
+        : score >= 7
+          ? "You have a solid foundation. A little more revision will take you even further."
+          : score >= 5
+            ? "You’re building a good foundation. Review the explanations and give it another go."
+            : score >= 3
+              ? "You’re getting there. Review the explanations and try again."
+              : "Every question is a chance to learn. Revisit the key concepts and try again.";
+      questionArea.innerHTML = `
+        <div class="result">
+          <div class="result-label"><span aria-hidden="true">✦</span> <span id="performance-label"></span></div>
+          <div class="score-ring" style="--score: ${percentage}" role="img" aria-label="${percentage}% score">
+            <div class="score-center">
+              <span class="score-value">${score}<span style="font-size: 20px; letter-spacing: 0;">/10</span></span>
+              <span class="score-total">correct answers</span>
+            </div>
+          </div>
+          <h2 id="result-title"></h2>
+          <p class="result-description">${resultMessage}</p>
+          <div class="result-summary">
+            <div class="summary-item"><strong>${percentage}%</strong><span>Overall score</span></div>
+            <div class="summary-item"><strong>${questions.length}</strong><span>Questions completed</span></div>
+          </div>
+          <button class="restart-button" id="restart-button" type="button">Retake the quiz <span aria-hidden="true">↻</span></button>
+        </div>
+      `;
+      document.getElementById("performance-label").textContent = performanceLabel;
+      document.getElementById("result-title").textContent = `${resultTitle}, ${playerName}!`;
+      cardBottom.hidden = true;
+      document.getElementById("restart-button").addEventListener("click", restartQuiz);
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      cardBottom.hidden = false;
+      chooseQuestions(true);
+      questionArea.innerHTML = `
+        <p class="question-kicker">Select one answer</p>
+        <h2 class="question-text" id="question-text"></h2>
+        <div class="answer-list" id="answer-list"></div>
+      `;
+      questionText = document.getElementById("question-text");
+      answerList = document.getElementById("answer-list");
+      renderQuestion();
+    }
+
+    nextButton.addEventListener("click", () => {
+      if (!hasAnswered || isComplete) return;
+      if (currentQuestion < questions.length - 1) {
+        currentQuestion += 1;
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    });
+
+    chooseQuestions();
+    renderQuestion();
+  </script>
+</body>
+</html>
